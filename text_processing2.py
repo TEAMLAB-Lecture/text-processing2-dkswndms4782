@@ -1,68 +1,52 @@
-#######################
-# Test Processing II  #
-#######################
-
-
 def digits_to_words(input_string):
-    """
-    인풋으로 받는 스트링에서 숫자만 추출하여 영어 단어로 변환하여 단어들이 연결된 스트링을 반환함
-    아래의 요건들을 충족시켜야함
-    * 반환하는 단어들은 영어 소문자여야함
-    * 단어들 사이에는 띄어쓰기 한칸이 있음
-    * 만약 인풋 스트링에서 숫자가 존재하지 않는 다면, 빈 문자열 (empty string)을 반환함
-
-        Parameters:
-            input_string (string): 영어로 된 대문자, 소문자, 띄어쓰기, 문장부호, 숫자로 이루어진 string
-            ex - "Zip Code: 19104"
-
-        Returns:
-            digit_string (string): 위 요건을 충족시킨 숫자만 영어단어로 추출된 string
-            ex - 'one nine one zero four'
-
-        Examples:
-            >>> import text_processing2 as tp2
-            >>> digits_str1 = "Zip Code: 19104"
-            >>> tp2.digits_to_words(digits_str1)
-            'one nine one zero four'
-            >>> digits_str2 = "Pi is 3.1415..."
-            >>> tp2.digits_to_words(digits_str2)
-            'three one four one five'
-    """
-    digit_string = None
-    return digit_string
-
-
-"""
-컴퓨터 프로그래밍에 많은 명명 규칙이 있지만, 두 규칙이 특히 흔히 쓰입니다. 
-첫번째로는, 변수 이름을 'underscore'로 나눠준다거나, (ex. under_score_variable)
-두번째로는, 변수 이름을 대소문자 구별해 구분자 (delimiter)없이 쓰는 경우가 있습니다. 
-이 두번째의 경우에는 첫번째 단어는 소문자로, 그 후에 오는 단어들의 첫번째 글자들은 대문자로 쓰입니다 (ex. camelCaseVariable). 
-"""
+    # numbers[0] = zero, numbers[8] = eight
+    # 인덱스를 이용하여 문자변환 가능
+    numbers = [
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+    ]
+    digit_string = ""
+    # 문자열 처음부터 끝까지 비교, 숫자라면 numbers[i]를 string에 더해준다.
+    for i in range(len(input_string)):
+        # isdigit()로 숫자인지 확인. return type : Boolean
+        if input_string[i].isdigit():
+            idx = int(input_string[i])
+            digit_string += numbers[idx] + " "
+    # string의 마지막이 " "일 것이므로 [:-1]슬라이싱 추가
+    return digit_string[:-1]
 
 
 def to_camel_case(underscore_str):
-    """
-    이 문제에서 첫번째 규칙 'underscore variable' 에서 두번째 규칙 'camelcase variable'으로 변환함
-    * 앞과 뒤에 여러개의 'underscore'는 무시해도 된
-    * 만약 어떤 변수 이름이 underscore로만 이루어 진다면, 빈 문자열만 반환해도 됨
-
-        Parameters:
-            underscore_str (string): underscore case를 따른 스트링
-
-        Returns:
-            camelcase_str (string): camelcase를 따른 스트링
-
-        Examples:
-            >>> import text_processing2 as tp2
-            >>> underscore_str1 = "to_camel_case"
-            >>> tp2.to_camel_case(underscore_str1)
-            "toCamelCase"
-            >>> underscore_str2 = "__EXAMPLE__NAME__"
-            >>> tp2.to_camel_case(underscore_str2)
-            "exampleName"
-            >>> underscore_str3 = "alreadyCamel"
-            >>> tp2.to_camel_case(underscore_str3)
-            "alreadyCamel"
-    """
-    camelcase_str = None
-    return camelcase_str
+    # "alreadyCamel"같은 경우 예외처리. "_"가 없으면 CamelCase의 경우로 알고 바로 출력해준다.
+    # find()로 "_"가 있는지 확인. return type : (-1 = 없는경우) (숫자 = 문자의위치)
+    if underscore_str.find("_") == -1:
+        return underscore_str
+    camelcase_str = ""
+    # 첫글자가 대문자면 True
+    first = False
+    # 문자열 처음부터 끝까지 확인.
+    for i in underscore_str:
+        # "_"가 있으면 first를 True로 설정해서 다음 문자의 첫글자를 대문자로 설정
+        if i == "_":
+            first = True
+        else:
+            # first가 True라서 Upper()를 사용해 대문자 더하기 해줌
+            if first:
+                camelcase_str += i.upper()
+                # 다음문자들은 소문자가 되어야하기 때문에 first = False
+                first = False
+            else:
+                camelcase_str += i.lower()
+    # "           "같은 경우 예외처리
+    if not len(camelcase_str):
+        return ""
+    # "__To_CAMEL" 같은 경우 camelcase_str은 ToCamel이 된다. 이와같은 경우 방지
+    return camelcase_str[0].lower() + camelcase_str[1:]
